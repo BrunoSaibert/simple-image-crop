@@ -1,19 +1,17 @@
-import Canvas from "./Canvas";
-import Preview from "./Preview";
-import Load from "./Load";
-import SelectionTool from "./SelectionTool";
-import Crop from "./Crop";
-import Download from "./Download";
+import createCanvas from "./Canvas";
+import setPreview from "./Preview";
+import configureLoad from "./Load";
+import createSelectionTool from "./SelectionTool";
+import canCrop from "./Crop";
+import canDownload from "./Download";
 
-const Photo = {
-  photoPreview: document.getElementById("photo-preview")
-};
+const Photo = {};
 
-Canvas(Photo);
-Preview(Photo);
-Load(Photo);
-SelectionTool(Photo);
-Crop(Photo);
-Download(Photo);
+createCanvas(Photo);
+setPreview(Photo);
+configureLoad(Photo);
+createSelectionTool(Photo);
+canCrop(Photo);
+canDownload(Photo);
 
 export default Photo;

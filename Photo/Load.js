@@ -28,7 +28,7 @@ export default function(Photo) {
       ctx.clearRect(0, 0, width, height);
 
       // desenhar a imagem no contexto
-      ctx.drawImage(image, 0, 0);
+      ctx.drawImage(Photo.image, 0, 0);
 
       Photo.preview();
     }

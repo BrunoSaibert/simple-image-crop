@@ -1,4 +1,6 @@
 export default function(Photo) {
+  Photo.cropButton = document.getElementById("crop-image");
+
   Photo.selection = document.getElementById("selection-tool");
   Photo.startSelection = false;
 
@@ -18,13 +20,13 @@ export default function(Photo) {
       Photo.endX = event.clientX;
       Photo.endY = event.clientY;
 
-      if (startSelection) {
+      if (Photo.startSelection) {
         Photo.selection.style.display = "initial";
-        Photo.selection.style.top = startY + "px";
-        Photo.selection.style.left = startX + "px";
+        Photo.selection.style.top = Photo.startY + "px";
+        Photo.selection.style.left = Photo.startX + "px";
 
-        Photo.selection.style.width = endX - startX + "px";
-        Photo.selection.style.height = endY - startY + "px";
+        Photo.selection.style.width = Photo.endX - Photo.startX + "px";
+        Photo.selection.style.height = Photo.endY - Photo.startY + "px";
       }
     },
     mouseup() {

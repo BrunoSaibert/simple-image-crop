@@ -1,24 +1,19 @@
 import Photo from "./Photo";
-let photoPreview = document.getElementById("photo-preview");
-let image;
-let photoName = "";
 
+// Carrega objeto de fotos
 window.addEventListener("DOMContentLoaded", () => {
   Photo.load();
 });
 
-// Selecionar foto
+// Selecionar imagem
 document.getElementById("select-image").onclick = () => {
-  document.getElementById("photo-file").photoFile.click();
+  document.getElementById("photo-file").click();
 };
 
 // Cortar imagem
-const cropButton = document.getElementById("crop-image");
-cropButton.onclick = () => {
+Photo.cropButton.onclick = () => {
   Photo.crop();
 };
 
-// Download
-const downloadButton = document.getElementById("download");
-downloadButton.onclick = ()=> Photo.download();
-};
+// Exportar imagem
+Photo.downloadButton.onclick = () => Photo.download();

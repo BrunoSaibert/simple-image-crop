@@ -16,8 +16,8 @@ export default function(Photo) {
     ];
 
     const [actualX, actualY] = [
-      +(relativeStartX * factorWidth),
-      +(relativeStartY * factorHeight)
+      +(Photo.relativeStartX * factorWidth),
+      +(Photo.relativeStartY * factorHeight)
     ];
 
     // pegar do ctx a imagem cortada
