@@ -1,162 +1,19 @@
-const photoFile = document.getElementById("photo-file");
-let photoPreview = document.getElementById("photo-preview");
-let image;
-let photoName = "";
+import Photo from "./Photo";
 
-// Select & Preview image
-
-document.getElementById("select-image").onclick = function() {
-  photoFile.click();
-};
-
+// Carrega objeto de fotos
 window.addEventListener("DOMContentLoaded", () => {
-  photoFile.addEventListener("change", () => {
-    let file = photoFile.files.item(0);
-    photoName = file.name;
-
-    // ler um arquivo
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function(event) {
-      image = new Image();
-      image.src = event.target.result;
-      image.onload = onLoadImage;
-    };
-  });
+  Photo.load();
 });
 
-// Selection tool
-const selection = document.getElementById("selection-tool");
-let startX,
-  startY,
-  relativeStartX,
-  relativeStartY,
-  endX,
-  endY,
-  relativeEndX,
-  relativeEndY;
-let startSelection = false;
-
-const events = {
-  mouseover() {
-    this.style.cursor = "crosshair";
-  },
-  mousedown() {
-    const { clientX, clientY, offsetX, offsetY } = event;
-
-    startX = clientX;
-    startY = clientY;
-    relativeStartX = offsetX;
-    relativeStartY = offsetY;
-
-    startSelection = true;
-  },
-  mousemove() {
-    const { clientX, clientY } = event;
-
-    endX = clientX;
-    endY = clientY;
-
-    if (startSelection) {
-      selection.style.display = "initial";
-      selection.style.top = startY + "px";
-      selection.style.left = startX + "px";
-
-      selection.style.width = endX - startX + "px";
-      selection.style.height = endY - startY + "px";
-    }
-  },
-  mouseup() {
-    startSelection = false;
-
-    relativeEndX = event.layerX;
-    relativeEndY = event.layerY;
-
-    // mostrar botão de corte
-    cropButton.style.display = "initial";
-  }
+// Selecionar imagem
+document.getElementById("select-image").onclick = () => {
+  document.getElementById("photo-file").click();
 };
-
-Object.keys(events).forEach(eventName => {
-  photoPreview.addEventListener(eventName, events[eventName]);
-});
-
-// Canvas
-let canvas = document.createElement("canvas");
-let ctx = canvas.getContext("2d");
-
-function onLoadImage() {
-  const { width, height } = image;
-
-  canvas.width = width;
-  canvas.height = height;
-
-  // limpar o contexto
-  ctx.clearRect(0, 0, width, height);
-
-  // desenhar a imagem no contexto
-  ctx.drawImage(image, 0, 0);
-
-  photoPreview.src = canvas.toDataURL();
-}
 
 // Cortar imagem
-
-const cropButton = document.getElementById("crop-image");
-cropButton.onclick = () => {
-  const { width: imgW, height: imgH } = image;
-  const { width: prevW, height: prevH } = photoPreview;
-
-  const [factorWidth, factorHeight] = [+(imgH / prevH), +(imgW / prevW)];
-
-  const [selectionWidth, selectionHeight] = [
-    +selection.style.width.replace("px", ""),
-    +selection.style.height.replace("px", "")
-  ];
-
-  const [croppedWidth, croppedHeight] = [
-    +(selectionWidth * factorWidth),
-    +(selectionHeight * factorHeight)
-  ];
-
-  const [actualX, actualY] = [
-    +(relativeStartX * factorWidth),
-    +(relativeStartY * factorHeight)
-  ];
-
-  // pegar do ctx a imagem cortada
-  const croppedImage = ctx.getImageData(
-    actualX,
-    actualY,
-    croppedWidth,
-    croppedHeight
-  );
-
-  // limpar o ctx
-  ctx.clearRect(0, 0, ctx.width, ctx.height);
-
-  // ajuste de proporções
-  image.width = canvas.width = croppedWidth;
-  image.height = canvas.height = croppedHeight;
-
-  // adicionar imagem cortada ao ctx
-  ctx.putImageData(croppedImage, 0, 0);
-
-  // esconder ferramenta de seleção
-  selection.style.display = "none";
-
-  // atualizar o preview da imagem
-  photoPreview.src = canvas.toDataURL();
-
-  // mostrar botão de download de
-  downloadButton.style.display = "initial";
+Photo.cropButton.onclick = () => {
+  Photo.crop();
 };
 
-// Download
-const downloadButton = document.getElementById("download");
-downloadButton.onclick = () => {
-  const a = document.createElement("a");
-  a.download = photoName + "-cropped.png";
-  a.href = canvas.toDataURL();
-  a.click();
-};
+// Exportar imagem
+Photo.downloadButton.onclick = () => Photo.download();
